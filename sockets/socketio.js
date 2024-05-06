@@ -7,15 +7,16 @@ const io = require("socket.io")({
   },
 });
 
-const server = require("http").createServer();
+const init = (server) => {
+  
+  // function parm server would be sent from the express.js file of the framework
+  // init function will start the socket io 
+  io.attach(server, {
+    pingInterval: 10000,
+    pingTimeout: 5000,
+    cookie: false,
+  });
 
-io.attach(server, {
-  pingInterval: 10000,
-  pingTimeout: 5000,
-  cookie: false,
-});
-
-const init = () => {
   io.on("connection", function (socket) {
     const id = socket.id;
     console.log("Socket connected :: ", id);
@@ -55,10 +56,6 @@ const init = () => {
 
       queryData,
     });
-  });
-
-  server.listen(process.env.SOCKET_PORT, () => {
-    console.log("Socket server started at port: ", process.env.SOCKET_PORT);
   });
 };
 
